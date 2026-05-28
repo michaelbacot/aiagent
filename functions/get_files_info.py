@@ -1,26 +1,20 @@
 import os
 
+
 def get_files_info(working_directory: str, directory: str = ".") -> str:
-    
+    output = ""
     try:
-        # get the absolute path of the working directory and the target directory
-        working_dir_abs = os.path.abspath(working_directory)
-        target_dir = os.path.normpath(os.path.join(working_dir_abs, directory))
-
-        # Either true or false, depending on whether the target directory is a subdirectory of the working directory
-        valid_target_dir = os.path.commonpath([working_dir_abs, target_dir]) == working_dir_abs
+        abs_working_dir = os.path.abspath(working_directory)
+        target_dir = os.path.normpath(os.path.join(abs_working_dir, directory))
+        if os.path.commonpath([abs_working_dir, target_dir]) != abs_working_dir:
+            return f'Error: Cannot list "{directory}" as it is outside the permitted working directory'
+        elif not os.path.isdir(target_dir):
+            return f'Error: "{directory}" is not a directory'
+        else:
+            output += f'Success: "{directory}" is within the working directory\n'
+            for item in os.listdir(target_dir):
+                item_path = os.path.join(target_dir, item)
+                output += f'- {item}: file_size={os.path.getsize(item_path)} bytes, is_dir={os.path.isdir(item_path)}\n'
+            return output
     except Exception as e:
-        return f'Error: {str(e)}'
-
-    if not os.path.isdir(directory):
-        return  f'Error: "{directory}" is not a directory'
-
-    if not valid_target_dir:
-        return f'Error: Cannot list "{directory}" as it is outside the permitted working directory'
-    
-    if valid_target_dir:
-        return f'Success: "{directory}" is within the working directory'
-
-
-
-    
+        return f"Error: {e}"
