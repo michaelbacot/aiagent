@@ -11,3 +11,8 @@ wheels/
 
 # Virtual environments
 .venv
+
+# files for testing functions
+lorem.txt
+morelorem.txt
+

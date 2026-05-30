@@ -1,7 +1,5 @@
 import os
 
-from aiagent.config import MAX_CHARS
-
 def write_file(working_directory: str, file_path: str, content: str) -> str:
     try:
         abs_working_dir = os.path.abspath(working_directory)
@@ -11,7 +9,7 @@ def write_file(working_directory: str, file_path: str, content: str) -> str:
         elif os.path.isdir(target_file):
             return f'Error: cannot write to "{file_path}" as it is a directory'
         else:
-            os.makedirs(file_path, exist_ok=True)
+            os.makedirs(os.path.dirname(target_file), exist_ok=True)
             with open(target_file, 'w') as f:
                 f.write(content)
             return f'Successfully wrote to "{file_path}" ({len(content)} characters written)'
